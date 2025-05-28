@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { MovieDetails, MovieResponse } from '../model/movies.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class MoviesService {
   private apiUrl: string = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
-   getMovies(page: number,selectedSection: string): Observable<any> {
+   getMovies(page: number,selectedSection: string): Observable<MovieResponse> {
     let movies: string = '';
     if(selectedSection ==='feelGood') {
       movies='/movie/popular';
@@ -20,7 +21,7 @@ export class MoviesService {
     } else if(selectedSection === 'mindBenders') {
       movies = '/movie/top_rated';
     }
-    return this.http.get<any>(`${this.apiUrl}${movies}`, {
+    return this.http.get<MovieResponse>(`${this.apiUrl}${movies}`, {
       params: {
         api_key: this.apiKey,
         page: page.toString(),
@@ -28,8 +29,8 @@ export class MoviesService {
       },
     });
  }
-getMovieDetails(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/movie/${id}?api_key=${this.apiKey}`);
+getMovieDetails(id: number): Observable<MovieDetails> {
+    return this.http.get<MovieDetails>(`${this.apiUrl}/movie/${id}?api_key=${this.apiKey}`);
   }
 
   searchMovies(query: string): Observable<any> {
