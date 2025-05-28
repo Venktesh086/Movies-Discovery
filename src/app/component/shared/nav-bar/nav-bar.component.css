@@ -1,0 +1,16 @@
+.space {
+    flex: 1 1 auto;
+  }
+  .logo {
+    font-size: 1rem;
+    font-weight: bold;
+ 
+  }
+  .colour-bar .logo {
+  color: white !important;
+}
+  .colour-bar{
+    background: #121229;
+    color:#fff;
+  }
+

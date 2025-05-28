@@ -1,0 +1,46 @@
+<div class="home-container">
+  <h1>What Should I Watch Tonight?</h1>
+    <mat-button-toggle-group [(ngModel)]="selectedSection" (ngModelChange)="onSectionChange($event)" class="section-switch" appearance="legacy">
+    <mat-button-toggle value="feelGood" class="feel-good-toggle">Feel Good</mat-button-toggle>
+  <mat-button-toggle value="actionFix" class="action-fix-toggle">Action Fix</mat-button-toggle>
+  <mat-button-toggle value="mindBenders" class="mind-benders-toggle">Mind Benders</mat-button-toggle>
+  </mat-button-toggle-group>
+<ng-container>
+
+
+  <div class="movies-col-row">
+    <mat-card *ngFor="let movie of movies" class="movies-card">
+      <img
+        mat-card-image
+        [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+        [alt]="movie.title"
+        [routerLink]="['/movie', movie.id]"
+        class="movie-images"
+      />
+
+      <mat-card-content>
+        <mat-chip-listbox>
+          <mat-chip highlighted>{{ movie.vote_average }}</mat-chip>
+        </mat-chip-listbox>
+        <h3 class="movies-title">{{ movie.title }}</h3>
+        <p class="movies-title">
+          {{ movie.release_date | date : "dd MMM yyyy" }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  </ng-container>
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageIndex]="currentPage"
+    [pageSizeOptions]="[10, 20, 30]"
+    (page)="onChangePage($event)"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+  <div *ngIf="loading" class="load-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
+
