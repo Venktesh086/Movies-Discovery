@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MoviesService } from '../../services/movies.service';
 import { Movies } from '../../model/movies.model';
@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-movie-details',
@@ -24,9 +25,10 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './movie-details.component.html',
   styleUrl: './movie-details.component.css'
 })
-export class MovieDetailsComponent implements OnInit{
+export class MovieDetailsComponent implements OnInit, OnDestroy{
  public movie!: Movies;
  public loading = false;
+ private subscription!: Subscription
   constructor( private route: ActivatedRoute,
     private movieService: MoviesService) {}
   ngOnInit(): void {
@@ -37,7 +39,7 @@ export class MovieDetailsComponent implements OnInit{
   }
 showMovieDetails(id: number): void {
     this.loading = true;
-    this.movieService.getMovieDetails(id).subscribe({
+   this.subscription = this.movieService.getMovieDetails(id).subscribe({
       next: (movieDetails) => {
         this.movie = movieDetails;
         this.loading = false;
@@ -51,5 +53,10 @@ showMovieDetails(id: number): void {
 
   goBack(): void {
     window.history.back();
+  }
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

@@ -20,17 +20,21 @@ describe('WatchMoviesComponent', () => {
   let fixture: ComponentFixture<WatchMoviesComponent>;
   let mockService: jasmine.SpyObj<MoviesService>;
 
-  const mockMoviesResponse = {
+    const mockMoviesResponse = {
+    page: 1,
     results: [
       {
         id: 101,
         title: 'Test Movie',
         poster_path: '/poster.jpg',
+        backdrop_path: '/backdrop.jpg',
         vote_average: 8.5,
-        release_date: '2023-12-01'
+        release_date: '2023-12-01',
+        overview: 'A test overview for the movie.'
       }
     ],
-    total_results: 1
+    total_results: 1,
+    total_pages: 1
   };
 
   beforeEach(async () => {
@@ -141,4 +145,5 @@ it('should show spinner when loading is true', waitForAsync(async () => {
   spinner = fixture.debugElement.query(By.css('.load-spinner'));
   expect(spinner).toBeFalsy();
 }));
+
 });

@@ -3,7 +3,7 @@ import { MovieDetailsComponent } from './movie-details.component';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { MoviesService } from '../../services/movies.service';
-import { Movies } from '../../model/movies.model';
+import { MovieDetails, Movies } from '../../model/movies.model';
 
 describe('MovieDetailsComponent', () => {
   let component: MovieDetailsComponent;
@@ -11,7 +11,7 @@ describe('MovieDetailsComponent', () => {
   let mockMoviesService: jasmine.SpyObj<MoviesService>;
   let mockActivatedRoute: any;
 
-  const dummyMovie: Movies = {
+  const dummyMovie: MovieDetails = {
     id: 1,
     title: 'Test Movie',
     poster_path: '/poster.jpg',
@@ -19,6 +19,21 @@ describe('MovieDetailsComponent', () => {
     vote_average: 8.5,
     release_date: '2022-01-01',
     overview: 'This is a test overview',
+    adult: false,
+    budget: 1000000,
+    genres: [],
+    homepage: '',
+    imdb_id: '',
+    original_language: 'en',
+    original_title: 'Test Movie',
+    popularity: 10,
+    revenue: 0,
+    runtime: 120,
+    status: 'Released',
+    tagline: '',
+    video: false,
+    origin_country: [],
+    vote_count: 0
   };
 
   beforeEach(async () => {

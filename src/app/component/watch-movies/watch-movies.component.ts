@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnChanges, OnInit } from '@angular/core';
+import { Component, DoCheck, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { MoviesService } from '../../services/movies.service';
 import { Movies } from '../../model/movies.model';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-watch-movies',
@@ -25,7 +27,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './watch-movies.component.html',
   styleUrl: './watch-movies.component.css'
 })
-export class WatchMoviesComponent implements OnInit{
+export class WatchMoviesComponent implements OnInit, OnDestroy{
   public movies: Movies[] = [];
   public loading = false;
   public currentPage = 1;
@@ -33,6 +35,7 @@ export class WatchMoviesComponent implements OnInit{
   public isInViewport = false;
   public pageSize = 20;
   public selectedSection = 'feelGood';
+  private subscription!: Subscription;
   constructor(public moviesservice: MoviesService) {}
   ngOnInit(): void {
    this.loadMovies();
@@ -47,7 +50,7 @@ export class WatchMoviesComponent implements OnInit{
     this.loading = true;
     const pageNumber = this.currentPage + 1;
 
-    this.moviesservice.getMovies(pageNumber, this.selectedSection).subscribe({
+    this.subscription = this.moviesservice.getMovies(pageNumber, this.selectedSection).subscribe({
       next: (res: any) => {
         this.movies = res.results;
         this.totalItems = res.total_results;
@@ -81,5 +84,11 @@ public onChangePage(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.loadMovies();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    
   }
 }

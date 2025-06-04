@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { debounceTime, distinctUntilChanged, Subject, Subscription, switchMap } from 'rxjs';
 import { MoviesService } from '../../services/movies.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -23,15 +23,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './search-list.component.html',
   styleUrl: './search-list.component.css'
 })
-export class SearchListComponent {
-public searchQuery = '';
+export class SearchListComponent implements OnInit, OnDestroy{
+public searchQuery: string = '';
 public searchResults: any[] = [];
   private searchSubject = new Subject<string>();
+  private subscription!: Subscription;
 
   constructor(private movieService: MoviesService, private router: Router) {}
 
   ngOnInit() {
-    this.searchSubject
+    this.subscription = this.searchSubject
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
@@ -52,5 +53,11 @@ public searchResults: any[] = [];
 
   selectMovie(movie: any) {
     this.router.navigate(['/movie', movie.id]);
+  }
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    this.searchSubject.complete();
   }
 }
